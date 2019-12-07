@@ -24,6 +24,4 @@ func CreateConnection() (*gorm.DB, error) {
 		"mysql", "root:123456@/shopping?charset=utf8&parseTime=True&loc=Local")
 
 	return  db, err
-
-
 }

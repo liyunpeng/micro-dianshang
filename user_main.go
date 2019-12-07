@@ -20,16 +20,27 @@ func main() {
 		log.Fatalf("connection error : %v \n", err)
 	}
 
+	/*
+		数据仓库对外提供了数据的增删改成
+		数据仓库需要一个数据库连接db, 通过此连接来操作数据库，实现增删改查
+	 */
 	repo := &repository.User{db}
 
-	//service := gppc.NewService(
 	service := micro.NewService(
+	//service := grpc.NewService(
 		micro.Name("go.micro.srv.user"),
 		micro.Version("latest"),
 	)
 
 	service.Init()
 
+	/*
+		向服务注入包含了各种业务方法的业务结构体
+		handler.User{repo} 构造出了这个业务的结构体
+		这个注册的中甲的业务名UserService对应了url请求地主里的路径
+		http://localhost:8080/user/UserService/Register
+
+	 */
 	user.RegisterUserServiceHandler(service.Server(), &handler.User{repo})
 
 	// Register Struct as Subscriber

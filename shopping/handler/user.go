@@ -7,6 +7,7 @@ import (
 	"shopping/user/model"
 	user "shopping/user/proto/user"
 	"shopping/user/repository"
+	"github.com/micro/go-log"
 )
 
 type User struct {
