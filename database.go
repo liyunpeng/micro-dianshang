@@ -4,6 +4,11 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
+/*
+test:
+http://localhost:8080/user/UserService/Register
+{"user":{"id":1, "name":"test", "phone":"110", "password":"aaaaa"}}
+*/
 
 func CreateConnection() (*gorm.DB, error) {
 	//host := "192.168.0.145"

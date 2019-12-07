@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro"
-
 	//"github.com/micro/go-grpc"
+
 	"shopping/user/handler"
 	"shopping/user/model"
 	"shopping/user/repository"
@@ -24,17 +24,16 @@ func main() {
 	}
 
 	repo := &repository.User{db}
-
+	//{"user":{"id":1, "name":"test", "phone":"110", "password":"aaaaa"}}
 	// New Service
+	//service := micro.NewService(
 	service := micro.NewService(
 		micro.Name("go.micro.srv.user"),
 		micro.Version("latest"),
 	)
 
-	// Initialise service
 	service.Init()
 
-	// Register Handler
 	user.RegisterUserServiceHandler(service.Server(), &handler.User{repo})
 
 	// Register Struct as Subscriber
