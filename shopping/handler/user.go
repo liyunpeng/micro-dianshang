@@ -5,9 +5,8 @@ import (
 	"github.com/micro/go-micro/errors"
 	"golang.org/x/crypto/bcrypt"
 	"shopping/user/model"
-	"shopping/user/repository"
-	"github.com/micro/go-log"
 	user "shopping/user/proto/user"
+	"shopping/user/repository"
 )
 
 type User struct {
