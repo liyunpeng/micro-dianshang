@@ -10,7 +10,7 @@ $go run server.go database.go
 $ go run client.go
 respons message: 注册成功
 respons message: 登录成功
-
+respons message: name1，您的密码更新成功
 
 
 测试方法：

@@ -60,4 +60,17 @@ func main() {
 		fmt.Println("respons message:", res.Msg)
 	}
 
+	// 修改密码的rpc调用
+	UpdatePasswordRequest := user.UpdatePasswordRequest{
+		Uid:1,  //  通过id找到用户， 生产环境应该是用户名
+		OldPassword:"123456",
+		NewPassword:"654321",
+	}
+	res, err = userService.UpdatePassword(context.TODO(), &UpdatePasswordRequest)
+	if err != nil {
+		fmt.Println("errro:", err)
+	}else{
+		fmt.Println("respons message:", res.Msg)
+	}
+
 }

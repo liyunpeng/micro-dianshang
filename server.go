@@ -49,7 +49,6 @@ func main() {
 		handler.User{repo} 构造出了这个业务的结构体
 		这个注册的中甲的业务名UserService对应了url请求地主里的路径
 		http://localhost:8080/user/UserService/Register
-
 	 */
 	user.RegisterUserServiceHandler(service.Server(), &handler.User{repo})
 	//user.RegisterUserServiceHandler(service.Server(), new(handler.User{repo}))
