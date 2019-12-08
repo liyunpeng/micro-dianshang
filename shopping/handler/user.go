@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"github.com/micro/go-micro/errors"
 	"golang.org/x/crypto/bcrypt"
 	"shopping/user/model"
@@ -14,7 +15,7 @@ type User struct {
 	Repo *repository.User
 }
 
-// Call is a single request handler called via client.Call or the generated client code
+
 func (e *User) Register(ctx context.Context, req *user.RegisterRequest, rsp *user.Response) error {
 	hashedPwd, err := bcrypt.GenerateFromPassword([]byte(req.User.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -39,6 +40,7 @@ func (e *User) Register(ctx context.Context, req *user.RegisterRequest, rsp *use
 }
 
 func (e *User) Login(ctx context.Context, req *user.LoginRequest, rsp *user.Response) error {
+	fmt.Println("Login 请求参数:", req)
 	user, err := e.Repo.FindByField("phone", req.Phone, "id , password")
 	if err != err {
 		return err
