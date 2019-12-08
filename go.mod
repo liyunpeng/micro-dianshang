@@ -13,10 +13,11 @@ require (
 	github.com/hashicorp/serf v0.8.5 // indirect
 	github.com/jinzhu/gorm v1.9.11
 	github.com/klauspost/cpuid v1.2.2 // indirect
-	github.com/lucas-clemente/quic-go v0.14.0 // indirect
+	github.com/lucas-clemente/quic-go v0.14.1 // indirect
+	github.com/micro/go-grpc v1.0.1 // indirect
 	github.com/micro/go-log v0.1.0
 	github.com/micro/go-micro v1.17.1
-	github.com/micro/go-plugins v1.5.1 // indirect
+	github.com/micro/go-plugins v1.5.1
 	github.com/micro/micro v1.17.1 // indirect
 	github.com/miekg/dns v1.1.24 // indirect
 	github.com/nats-io/jwt v0.3.2 // indirect
@@ -39,6 +40,8 @@ require (
 )
 
 replace (
+	github.com/golang/lint => F:\GoWorkSpace\micro-dianshang\vendor\golang.org\x\lint
+	github.com/testcontainers/testcontainer-go => F:\GoWorkSpace\testcontainer\testcontainers-go
 	shopping/user/handler => F:\GoWorkSpace\micro-dianshang\shopping\handler
 	shopping/user/model => F:\GoWorkSpace\micro-dianshang\shopping\model
 	shopping/user/proto/user => F:\GoWorkSpace\micro-dianshang\shopping\proto\user

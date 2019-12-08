@@ -2,11 +2,14 @@ package main
 import (
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro"
+	"github.com/micro/go-micro/registry"
+
 	//"github.com/micro/go-grpc"
 	"shopping/user/handler"
 	"shopping/user/model"
 	user "shopping/user/proto/user"
 	"shopping/user/repository"
+	"github.com/micro/go-plugins/registry/etcdv3"
 )
 
 func main() {
@@ -20,6 +23,12 @@ func main() {
 		log.Fatalf("connection error : %v \n", err)
 	}
 
+	reg := etcdv3.NewRegistry(func(op *registry.Options) {
+		op.Addrs = []string{
+			"http://192.168.3.34:2379", "http://192.168.3.18:2379", "http://192.168.3.110:2379",
+		}
+	})
+
 	/*
 		数据仓库对外提供了数据的增删改成
 		数据仓库需要一个数据库连接db, 通过此连接来操作数据库，实现增删改查
@@ -28,8 +37,9 @@ func main() {
 
 	service := micro.NewService(
 	//service := grpc.NewService(
-		micro.Name("go.micro.srv.user"),
-		micro.Version("latest"),
+		micro.Name("user5"),
+		micro.Registry(reg),
+		//micro.Version("latest"),
 	)
 
 	service.Init()
@@ -42,14 +52,13 @@ func main() {
 
 	 */
 	user.RegisterUserServiceHandler(service.Server(), &handler.User{repo})
+	//user.RegisterUserServiceHandler(service.Server(), new(handler.User{repo}))
 
 	// Register Struct as Subscriber
 	//micro.RegisterSubscriber("go.micro.srv.user", service.Server(), new(subscriber.Example))
 
 	// Register Function as Subscriber
 	//micro.RegisterSubscriber("go.micro.srv.user", service.Server(), subscriber.Handler)
-
-	// Run service
 	if err := service.Run(); err != nil {
 		log.Fatal(err)
 	}
