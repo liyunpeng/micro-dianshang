@@ -4,9 +4,11 @@ import (
 	"context"
 	"fmt"
 	micro "github.com/micro/go-micro"
+	"github.com/micro/go-micro/util/log"
+
+	"github.com/micro/go-micro/broker"
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-plugins/registry/etcdv3"
-
 	//proto "proto_gen"
 	user "shopping/user/proto/user"
 )
@@ -17,7 +19,7 @@ func main() {
 		从registry获取一个micro服务，并将服务初始化
 		micro服务的客户端， 获取一个客制化服务，
 		所有的rpc请求都是由客制化服务完成
-	 */
+	*/
 	reg := etcdv3.NewRegistry(func(op *registry.Options) {
 		op.Addrs = []string{
 			// 经试验, 不用配置这些地址， 只要本地启动etcd, micro的业务提供者和使用者都可正常工作
@@ -44,7 +46,7 @@ func main() {
 	res, err := userService.Register(context.TODO(), &regiserRequest)
 	if err != nil {
 		fmt.Println("errro:", err)
-	}else{
+	} else {
 		fmt.Println("respons message:", res.Msg)
 	}
 
@@ -56,21 +58,42 @@ func main() {
 	res, err = userService.Login(context.TODO(), &loginRequest)
 	if err != nil {
 		fmt.Println("errro:", err)
-	}else{
+	} else {
 		fmt.Println("respons message:", res.Msg)
 	}
 
 	// 修改密码的rpc调用
 	UpdatePasswordRequest := user.UpdatePasswordRequest{
-		Uid:1,  //  通过id找到用户， 生产环境应该是用户名
-		OldPassword:"123456",
-		NewPassword:"654321",
+		Uid:         1, //  通过id找到用户， 生产环境应该是用户名
+		OldPassword: "123456",
+		NewPassword: "654321",
 	}
 	res, err = userService.UpdatePassword(context.TODO(), &UpdatePasswordRequest)
 	if err != nil {
 		fmt.Println("errro:", err)
-	}else{
+	} else {
 		fmt.Println("respons message:", res.Msg)
 	}
 
+	//broker.Subscribe("Topic主题", func(p broker.Publication) error {
+	//	brokerHeader := p.Message().Header
+	//	aaa := brokerHeader["AAA"]
+	//	bbb := string(p.Message().Body)
+	//})
+	//if err != nil {
+	//	//log.Fatal(err.Error())
+	//}
+	sub()
+
+}
+func sub() {
+	topic := "Topic主题"
+	// 订阅消息并接收
+	_, err := broker.Subscribe(topic, func(p broker.Event) error {
+		log.Info("[sub] Received Body: %s,Header: %s\n", string(p.Message().Body), p.Message().Header)
+		return nil
+	})
+	if err != nil {
+		fmt.Println(err)
+	}
 }

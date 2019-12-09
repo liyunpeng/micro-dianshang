@@ -2,6 +2,7 @@ package main
 import (
 	"github.com/micro/go-log"
 	"github.com/micro/go-micro"
+
 	"github.com/micro/go-micro/registry"
 
 	//"github.com/micro/go-grpc"
@@ -10,9 +11,20 @@ import (
 	user "shopping/user/proto/user"
 	"shopping/user/repository"
 	"github.com/micro/go-plugins/registry/etcdv3"
+	"github.com/micro/go-micro/broker"
+	"github.com/micro/go-plugins/broker/kafka"
+
 )
 
 func main() {
+
+	//b := rabbitmq.NewBroker(
+	//	broker.Addrs("amqp://用户名:密码@主机host:端口port"),
+	//)
+	//
+	//b.Init()
+	//b.Connect()
+
 
 	db, err := CreateConnection()
 	defer db.Close()
@@ -35,12 +47,25 @@ func main() {
 	 */
 	repo := &repository.User{db}
 
+
+
 	service := micro.NewService(
 	//service := grpc.NewService(
 		micro.Name("user5"),
 		micro.Registry(reg),
 		//micro.Version("latest"),
+		micro.Broker(kafka.NewBroker(func(o *broker.Options) {
+			o.Addrs = []string{
+				0: "192.168.0.33:9092",
+			}    //config.BrokerURLs
+		})),
+
 	)
+
+	if err := broker.Connect(); err != nil {
+		log.Fatal(err.Error())
+	}
+
 
 	service.Init()
 
@@ -52,6 +77,20 @@ func main() {
 	 */
 	user.RegisterUserServiceHandler(service.Server(), &handler.User{repo})
 	//user.RegisterUserServiceHandler(service.Server(), new(handler.User{repo}))
+
+	broker.Publish("Topic主题", &broker.Message{
+		Header: map[string]string{
+			"AAA": "BBBBB",
+			"CCCCC": "DDDDDD",
+		},
+		Body: []byte("消息内容"),
+	})
+
+	//创建消息发布者
+	//publisher := micro.NewPublisher("notification.submit" , service.Client())
+
+	//在注册订单handler里传进去publisher
+	//order.RegisterOrderServiceHandler(service.Server(), &handler.Order{repo , productCli , publisher})
 
 	// Register Struct as Subscriber
 	//micro.RegisterSubscriber("go.micro.srv.user", service.Server(), new(subscriber.Example))
